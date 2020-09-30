@@ -1,0 +1,14 @@
+FROM php:7.4.8-fpm
+
+RUN apt-get update && apt-get install -y libmcrypt-dev libzip-dev libpq-dev libonig-dev \
+ && docker-php-ext-install zip \
+ && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+ && docker-php-ext-install pgsql pdo_pgsql pcntl \
+ && apt-get install -y ghostscript libmagickwand-dev --no-install-recommends \
+ && pecl install imagick \
+ && docker-php-ext-enable imagick \
+ && docker-php-ext-install mbstring
+
+RUN curl -sS https://getcomposer.org/installer | php \
+ && mv composer.phar /usr/local/bin/ \
+ && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
